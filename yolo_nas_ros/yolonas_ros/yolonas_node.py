@@ -4,7 +4,6 @@ import random
 
 import rclpy
 from rclpy.qos import qos_profile_sensor_data
-from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.node import Node
 from cv_bridge import CvBridge
 
@@ -44,9 +43,9 @@ class YoloNasNode(Node):
         device = self.get_parameter(
             "device").get_parameter_value().string_value
 
-        self.declare_parameter("threshold", 0.5)
-        self.threshold = self.get_parameter(
-            "threshold").get_parameter_value().double_value
+        self.declare_parameter("threshold", "0.5")
+        self.threshold = float(self.get_parameter(
+            "threshold").get_parameter_value().string_value)
 
         self.declare_parameter("enable", True)
         self.enable = self.get_parameter(
@@ -165,4 +164,5 @@ def main():
     rclpy.init()
     node = YoloNasNode()
     rclpy.spin(node)
+    node.destroy_node()
     rclpy.shutdown()
